@@ -1,9 +1,11 @@
 package space.arim.estimator;
 
 public final class DoubleTriplet {
+	
 	private final double value1;
 	private final double value2;
 	private final double value3;
+	
 	public DoubleTriplet(double value1, double value2, double value3) {
 		this.value1 = value1;
 		this.value2 = value2;
