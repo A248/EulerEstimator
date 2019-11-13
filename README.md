@@ -3,5 +3,5 @@ EulerEstimator approximates the value of some y given a differential equation re
 
 **Building**
 
-1. Download/clone repo.
-2. Compile.
+1. Download/clone repo source folder (Estimator/src/).
+2. Compile using Maven.
