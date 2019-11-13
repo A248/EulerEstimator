@@ -4,7 +4,7 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.Scanner;
 
-public class User {
+public class UserDisplay {
 	
 	private final Scanner scanner;
 	
@@ -12,10 +12,12 @@ public class User {
 	
 	private final int precision;
 	
-	public User(InputStream input, PrintStream output) {
+	private static final String invalid_point = "Please enter an ordered pair without parentheses, e.g. \"10,0.1\".";
+	
+	public UserDisplay(InputStream input, PrintStream output, int precision) {
 		scanner = new Scanner(input);
 		this.output = output;
-		precision = 4;
+		this.precision = precision;
 	}
 	
 	private void say(String message) {
@@ -32,59 +34,58 @@ public class User {
 	}
 	
 	public void run() {
+		
 		say("Welcome to the Estimator by Anand Beh!");
 		say("\n");
 		say("Please input an equation for dy/dx in terms of x and y.");
 		say("For example, stating \"x + y\" would determine that dy/dx = x + y");
+		
 		String function = getNext();
+		
 		say("\n\nSpecified function: dy/dx =" + function + "\n");
-		say("Please state:\n1.) The step between subsequent x values when iterating.\n2.) The number of times you wish to iterate.");
-		say("The step value:");
-		double step = 0D;
-		while (step <= 0D) {
-			try {
-				step = Double.parseDouble(getNext());
-				if (step == 0D) {
-					say("Please enter a non-zero decimal!");
-				}
-			} catch (NumberFormatException ex) {
-				say("Please enter a valid non-zero decimal!");
-			}
-		}
-		say("\nThe number of times to iterate:");
+		say("Please state:\n1.) The number of times you wish to iterate.\n2.) The step between subsequent x values when iterating.");
+		
+		say("Enter these as a pair without parentheses, e.g. 10,0.1.");
 		int iterations = 0;
-		while (iterations <= 0) {
-			try {
-				iterations = Integer.parseInt(getNext());
-				if (iterations <= 0) {
-					say("Please enter a positive integer!");
+		double step = 0D;
+		while (iterations <= 0 || step <= 0D) {
+			String inputs = getNext();
+			if (inputs.contains(",")) {
+				String[] input = inputs.split(",");
+				try {
+					iterations = Integer.parseInt((input[0]));
+					step = Double.parseDouble((input[1]));
+				} catch (NumberFormatException ex) {
+					say(invalid_point);
 				}
-			} catch (NumberFormatException ex) {
-				say("Please enter a valid positive integer!");
+			} else {
+				say(invalid_point);
 			}
 		}
-		say("Please state the initial x value from which to calculate.");
+		
+		say("Please state the initial point from which to calculate, such as 0,2.");
 		double x = Double.POSITIVE_INFINITY;
-		while (x == Double.POSITIVE_INFINITY) {
-			try {
-				x = Double.parseDouble(getNext());
-			} catch (NumberFormatException ex) {
-				say("Please enter a valid decimal!");
-			}
-		}
-		say("Please state the initial y value from which to calculate.");
 		double y = Double.NEGATIVE_INFINITY;
-		while (y == Double.NEGATIVE_INFINITY) {
-			try {
-				y = Double.parseDouble(getNext());
-			} catch (NumberFormatException ex) {
-				say("Please enter a valid decimal!");
+		while (x == Double.POSITIVE_INFINITY || y == Double.NEGATIVE_INFINITY) {
+			String inputs = getNext();
+			if (inputs.contains(",")) {
+				String[] input = inputs.split(",");
+				try {
+					x = Double.parseDouble((input[0]));
+					y = Double.parseDouble((input[1]));
+				} catch (NumberFormatException ex) {
+					say(invalid_point);
+				}
+			} else {
+				say(invalid_point);
 			}
 		}
-		say("Ready to begin iteration?");
+		
+		say("Ready to begin iteration? y/n");
 		while (!ready(getNext())) {
 			say("Looks like you aren't ready. How about now?");
 		}
+		long prev = System.nanoTime();
 		EulerApproximator diffEQ = new EulerApproximator(function, x, y);
 		say("Format:\n     x    |     y    |    dy/dx");
 		spitLine(diffEQ.initialX(), diffEQ.initialY(), diffEQ.calculateDerivative());
@@ -92,12 +93,13 @@ public class User {
 		for (DoubleTriplet triplet : results) {
 			spitLine(triplet.value1(), triplet.value2(), triplet.value3());
 		}
-		say("Finished!");
+		say("Finished in " + ((System.nanoTime() - prev)/(1000_000_000D)) + " seconds.");
 	}
 	
 	private void spitLine(double x, double y, double derivative) {
 		
 		say(String.format("%." + precision + "f", x) + "    |    " + String.format("%." + precision + "f", y) + "    |    " + String.format("%." + precision + "f", derivative));
+		
 	}
 
 	private boolean ready(String answer) {

@@ -3,7 +3,7 @@ package space.arim.estimator;
 public class Main {
 
 	public static void main(String[] args) {
-		User user = new User(System.in, System.out);
+		UserDisplay user = new UserDisplay(System.in, System.out, 4);
 		user.run();
 		user.stop();
 	}
