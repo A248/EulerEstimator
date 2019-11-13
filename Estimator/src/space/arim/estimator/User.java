@@ -4,7 +4,7 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.Scanner;
 
-public class Estimator {
+public class User {
 	
 	private final Scanner scanner;
 	
@@ -12,7 +12,7 @@ public class Estimator {
 	
 	private final int precision;
 	
-	public Estimator(InputStream input, PrintStream output) {
+	public User(InputStream input, PrintStream output) {
 		scanner = new Scanner(input);
 		this.output = output;
 		precision = 4;
