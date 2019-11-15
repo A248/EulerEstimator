@@ -1,5 +1,7 @@
 package space.arim.estimator;
 
+import java.io.PrintStream;
+
 import org.mariuszgromada.math.mxparser.Function;
 
 public class EulerApproximator {
@@ -7,10 +9,14 @@ public class EulerApproximator {
 	private final double initialX;
 	private final double initialY;
 	
-	public EulerApproximator(String expression, double initialX, double initialY) {
-		function = new Function("D(x,y) = " + expression);
+	public EulerApproximator(Function function, double initialX, double initialY) {
+		this.function = function;
 		this.initialX = initialX;
 		this.initialY = initialY;
+	}
+	
+	public final Function function() {
+		return function;
 	}
 	
 	public final double initialX() {
@@ -20,26 +26,33 @@ public class EulerApproximator {
 	public final double initialY() {
 		return initialY;
 	}
-	
-	public final double calculateDerivative() {
-		return calculateDerivative(initialX, initialY);
-	}
-	
-	public final double calculateDerivative(double x, double y) {
-		return function.calculate(x, y);
-	}
 
 	public DoubleTriplet[] approximations(double step, int iterations) {
-		DoubleTriplet[] results = new DoubleTriplet[iterations];
-		assert results.length == iterations;
+		DoubleTriplet[] results = new DoubleTriplet[iterations+1];
+		assert results.length == iterations+1;
 		double x = initialX;
 		double y = initialY;
+		results[0] = new DoubleTriplet(x, y, function.calculate(x, y));
 		for (int n = 0; n < iterations; n++) {
 			double deriv = function.calculate(x, y);
 			y = y + step*deriv;
 			x = x + step;
-			results[n] = new DoubleTriplet(x, y, deriv);
+			results[n+1] = new DoubleTriplet(x, y, deriv);
 		}
 		return results;
+	}
+	
+	public void approximations(PrintStream output, int precision, double step, int iterations) {
+		double x = initialX;
+		double y = initialY;
+		EulerEstimator.spitFunction(output, function);
+		EulerEstimator.spitInitial(output, precision);
+		EulerEstimator.spitLine(output, precision, x, y, function.calculate(x, y));
+		for (int n = 0; n < iterations; n++) {
+			double deriv = function.calculate(x, y);
+			y = y + step*deriv;
+			x = x + step;
+			EulerEstimator.spitLine(output, precision, x, y, deriv);
+		}
 	}
 }

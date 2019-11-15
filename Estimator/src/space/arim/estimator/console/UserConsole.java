@@ -1,10 +1,15 @@
-package space.arim.estimator;
+package space.arim.estimator.console;
 
-import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.Scanner;
 
-public class UserDisplay {
+import org.mariuszgromada.math.mxparser.Function;
+
+import space.arim.estimator.DoubleTriplet;
+import space.arim.estimator.EulerApproximator;
+import space.arim.estimator.EulerEstimator;
+
+public class UserConsole implements AutoCloseable {
 	
 	private final Scanner scanner;
 	
@@ -14,8 +19,8 @@ public class UserDisplay {
 	
 	private static final String invalid_point = "Please enter an ordered pair without parentheses, e.g. \"10,0.1\".";
 	
-	public UserDisplay(InputStream input, PrintStream output, int precision) {
-		scanner = new Scanner(input);
+	public UserConsole(Scanner scanner, PrintStream output, int precision) {
+		this.scanner = scanner;
 		this.output = output;
 		this.precision = precision;
 	}
@@ -24,8 +29,17 @@ public class UserDisplay {
 		output.println(message);
 	}
 	
-	private String getNext() {
+	private String next() {
 		String input = scanner.next();
+		if (input.equalsIgnoreCase("STOP") || input.equalsIgnoreCase("EXIT")) {
+			say("Shutting down...");
+			stop();
+		}
+		return input;
+	}
+	
+	private String nextLine() {
+		String input = scanner.nextLine();
 		if (input.equalsIgnoreCase("STOP") || input.equalsIgnoreCase("EXIT")) {
 			say("Shutting down...");
 			stop();
@@ -40,7 +54,7 @@ public class UserDisplay {
 		say("Please input an equation for dy/dx in terms of x and y.");
 		say("For example, stating \"x + y\" would determine that dy/dx = x + y");
 		
-		String function = getNext();
+		String function = nextLine();
 		
 		say("\n\nSpecified function: dy/dx =" + function + "\n");
 		say("Please state:\n1.) The number of times you wish to iterate.\n2.) The step between subsequent x values when iterating.");
@@ -49,12 +63,12 @@ public class UserDisplay {
 		int iterations = 0;
 		double step = 0D;
 		while (iterations <= 0 || step <= 0D) {
-			String inputs = getNext();
+			String inputs = nextLine();
 			if (inputs.contains(",")) {
 				String[] input = inputs.split(",");
 				try {
-					iterations = Integer.parseInt((input[0]));
-					step = Double.parseDouble((input[1]));
+					iterations = Integer.parseInt((input[0].replaceAll(" ", "")));
+					step = Double.parseDouble((input[1].replaceAll(" ", "")));
 				} catch (NumberFormatException ex) {
 					say(invalid_point);
 				}
@@ -67,12 +81,12 @@ public class UserDisplay {
 		double x = Double.POSITIVE_INFINITY;
 		double y = Double.NEGATIVE_INFINITY;
 		while (x == Double.POSITIVE_INFINITY || y == Double.NEGATIVE_INFINITY) {
-			String inputs = getNext();
+			String inputs = nextLine();
 			if (inputs.contains(",")) {
 				String[] input = inputs.split(",");
 				try {
-					x = Double.parseDouble((input[0]));
-					y = Double.parseDouble((input[1]));
+					x = Double.parseDouble((input[0].replaceAll(" ", "")));
+					y = Double.parseDouble((input[1].replaceAll(" ", "")));
 				} catch (NumberFormatException ex) {
 					say(invalid_point);
 				}
@@ -82,43 +96,29 @@ public class UserDisplay {
 		}
 		
 		say("Ready to begin iteration? y/n");
-		while (!ready(getNext())) {
+		while (!EulerEstimator.parseBoolean(next())) {
 			say("Looks like you aren't ready. How about now?");
 		}
 		long prev = System.nanoTime();
-		EulerApproximator diffEQ = new EulerApproximator(function, x, y);
-		say("Format:\n     x    |     y    |    dy/dx");
-		spitLine(diffEQ.initialX(), diffEQ.initialY(), diffEQ.calculateDerivative());
+		Function func = new Function("D(x,y) = " + function);
+		EulerApproximator diffEQ = new EulerApproximator(func, x, y);
+		EulerEstimator.spitFunction(output, func);
+		EulerEstimator.spitInitial(output, precision);
 		DoubleTriplet[] results = diffEQ.approximations(step, iterations);
 		for (DoubleTriplet triplet : results) {
-			spitLine(triplet.value1(), triplet.value2(), triplet.value3());
+			EulerEstimator.spitLine(output, precision, triplet.value1(), triplet.value2(), triplet.value3());
 		}
 		say("Finished in " + ((System.nanoTime() - prev)/(1000_000_000D)) + " seconds.");
 	}
 	
-	private void spitLine(double x, double y, double derivative) {
-		
-		say(String.format("%." + precision + "f", x) + "    |    " + String.format("%." + precision + "f", y) + "    |    " + String.format("%." + precision + "f", derivative));
-		
-	}
 
-	private boolean ready(String answer) {
-		switch (answer.toLowerCase()) {
-		case "yes":
-			return true;
-		case "okay":
-			return true;
-		case "ok":
-			return true;
-		case "y":
-			return true;
-		default:
-			return Boolean.parseBoolean(answer);
-		}
-	}
 	
 	public void stop() {
 		scanner.close();
 		output.close();
+	}
+
+	@Override
+	public void close() throws Exception {
 	}
 }
