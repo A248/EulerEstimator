@@ -27,7 +27,7 @@ which can't be solved using Calc II techniques. What to do?
 2. Download the [latest release](https://github.com/A248/EulerEstimator/releases)
 3. Enjoy!
 
-**Building**
+**Building from Source**
 
 1. Download/clone [repo source folder](https://github.com/A248/EulerEstimator/tree/master/Estimator)
 2. In command prompt, navigate to folder and use `mvn clean install`.
