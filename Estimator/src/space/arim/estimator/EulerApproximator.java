@@ -33,7 +33,7 @@ public class EulerApproximator {
 		double deriv = function.calculate(x, y);
 		EulerEstimator.spitFunction(output, function);
 		EulerEstimator.spitInitial(output, precision);
-		for (int n = 0; n < iterations; n++) {
+		for (int n = 0; n < iterations + 1; n++) {
 			EulerEstimator.spitLine(output, precision, n, x, y, deriv);
 			y = y + step*deriv;
 			x = x + step;
