@@ -42,9 +42,9 @@ public class EulerEstimator {
 		output.println("Function: " + function.getFunctionExpressionString());
 	}
 	
-	public static void spitLine(PrintStream output, int precision, double x, double y, double derivative) {
+	public static void spitLine(PrintStream output, int precision, int iteration, double x, double y, double derivative) {
 		
-		output.println(String.format("%." + precision + "f", x) + "    |    " + String.format("%." + precision + "f", y) + "    |    " + String.format("%." + precision + "f", derivative));
+		output.println(iteration + "    |    " + String.format("%." + precision + "f", x) + "    |    " + String.format("%." + precision + "f", y) + "    |    " + String.format("%." + precision + "f", derivative));
 		
 	}
 	
@@ -54,7 +54,11 @@ public class EulerEstimator {
 			builder.append(" ");
 		}
 		String space = builder.toString();
-		output.println("    x" + space + "|" + space + "y" + space + "|" + space + "dy/dx");
+		output.println("n    " + "|" + space + "x" + space + "|" + space + "y" + space + "|" + space + "dy/dx");
+	}
+	
+	public static void spitTime(PrintStream output, long previous) {
+		output.println("Calculated in " + ((System.nanoTime() - previous)/(1000_000_000D)) + " seconds.");
 	}
 
 }

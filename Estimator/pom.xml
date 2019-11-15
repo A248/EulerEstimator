@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>space.arim</groupId>
   <artifactId>EulerEstimator</artifactId>
-  <version>0.2.0-SNAPSHOT</version>
+  <version>0.2.1-SNAPSHOT</version>
   <name>Estimator</name>
   <description>EulerEstimator approximates the value of some y given a differential equation relating dy/dx, y, and x using Euler's approximative approach.</description>
   <build>

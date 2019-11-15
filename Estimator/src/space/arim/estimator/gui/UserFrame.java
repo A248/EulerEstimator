@@ -18,6 +18,7 @@ import javax.swing.JTextField;
 import org.mariuszgromada.math.mxparser.Function;
 
 import space.arim.estimator.EulerApproximator;
+import space.arim.estimator.EulerEstimator;
 
 public class UserFrame implements AutoCloseable {
 	
@@ -44,13 +45,12 @@ public class UserFrame implements AutoCloseable {
 	private String expression = "x+y";
 	private double initialX = 0D;
 	private double initialY = 2D;
-	
-	private boolean first = true;
 	private HashMap<String, EulerApproximator> approximators = new HashMap<String, EulerApproximator>();
 	
 	private static final String INVALID_FUNCTION = "\n\nError:\nThe function you have entered is not a valid expression. Please check your syntax and try again.";
 	
 	public UserFrame(String title, String version) {
+		
 	   frame = new JFrame(title + " " + version);
 	   panel = new JPanel();
 	   panel.setBorder(BorderFactory.createTitledBorder(title));
@@ -59,32 +59,54 @@ public class UserFrame implements AutoCloseable {
 	   
 	   panel.setLayout(layout);
 
-	   add(new JLabel("Amount of iterations"), 1, 1, 6);
-	   add(new JLabel("Step value"), 8, 1, 5);
-	   add(new JLabel("Decimal precision"), 14, 1, 5);
-
-	   add(amountField = new JTextField("10"), 1, 2, 6);
-	   add(stepField = new JTextField("0.1"), 8, 2, 5);
-	   add(precisionField = new JTextField("4"), 14, 2, 5);
+	   add(new JLabel("Amount of iterations"), 1, 1, 8);
+	   add(amountField = new JTextField("10"), 1, 2, 8);
 	   
-	   add(new JLabel("dy/dx in terms of x and y"), 1, 4, 6);
-	   add(new JLabel("Initial X"), 8, 4, 5);
-	   add(new JLabel("Initial Y"), 14, 4, 5);
+	   add(new JLabel("Step value"), 1, 4, 8);
+	   add(stepField = new JTextField("0.1"), 1, 5, 8);
 	   
-	   add(functionField = new JTextField("x+y"), 1, 5, 6);
-	   add(initialXField = new JTextField("0"), 8, 5, 5);
-	   add(initialYField = new JTextField("2"), 14, 5, 5);
+	   add(new JLabel("Decimal precision"), 1, 7, 8);
+	   add(precisionField = new JTextField("4"), 1, 8, 8);
 	   
-	   add(runButton = new JButton("Execute"), 1, 7, 18, 1, 1, 0);
-	   add(outputArea = new JTextArea(2,10), 1, 9, 18, 10);
-	   add(new JScrollPane(outputArea), 1, 9, 18, 10);
+	   add(new JLabel("dy/dx in terms of x and y"), 1, 10, 8);
+	   add(functionField = new JTextField("x+y"), 1, 11, 8);
+	   
+	   add(new JLabel("Initial X"), 1, 13, 8);
+	   add(initialXField = new JTextField("0"), 1, 14, 8);
+	   
+	   add(new JLabel("Initial Y"), 1, 16, 8);
+	   add(initialYField = new JTextField("2"), 1, 17, 8);
+	   
+	   add(runButton = new JButton("Execute"), 1, 19, 20, 1, 0, 1);
+	   add(outputArea = new JTextArea(2,10), 10, 1, 8, 17, 15, 10);
+	   add(new JScrollPane(outputArea), 10, 1, 8, 17, 15, 10);
 	   runButton.addMouseListener(new GuiMouseListener(this));
+	   
+		/*
+		 * add(new JLabel("Amount of iterations"), 1, 1, 6); add(new
+		 * JLabel("Step value"), 8, 1, 5); add(new JLabel("Decimal precision"), 14, 1,
+		 * 5);
+		 * 
+		 * add(amountField = new JTextField("10"), 1, 2, 6); add(stepField = new
+		 * JTextField("0.1"), 8, 2, 5); add(precisionField = new JTextField("4"), 14, 2,
+		 * 5);
+		 * 
+		 * add(new JLabel("dy/dx in terms of x and y"), 1, 4, 6); add(new
+		 * JLabel("Initial X"), 8, 4, 5); add(new JLabel("Initial Y"), 14, 4, 5);
+		 * 
+		 * add(functionField = new JTextField("x+y"), 1, 5, 6); add(initialXField = new
+		 * JTextField("0"), 8, 5, 5); add(initialYField = new JTextField("2"), 14, 5,
+		 * 5);
+		 * 
+		 * add(runButton = new JButton("Execute"), 1, 7, 18, 1, 1, 0); add(outputArea =
+		 * new JTextArea(2,10), 1, 9, 18, 10, 1, 10); add(new JScrollPane(outputArea),
+		 * 1, 9, 18, 10, 1, 10); runButton.addMouseListener(new GuiMouseListener(this));
+		 */
 
 	   System.setErr(output = new PrintStream(new ExtendedOutput(outputArea)));
 	   
 	   frame().setContentPane(new JScrollPane(panel));
 	   frame().pack();
-	   frame().addWindowListener(new GuiCloseListener(frame()));
 	   frame().setVisible(true);
 	}
 	
@@ -125,7 +147,7 @@ public class UserFrame implements AutoCloseable {
 	}
 	
 	public void start() {
-		first = true;
+		
 	}
 	
 	private void parseFields() {
@@ -172,12 +194,6 @@ public class UserFrame implements AutoCloseable {
 		}
 	}
 	
-	private void clearLines() {
-		for (int n = 0; n < 10; n++) {
-			output.println("\n");
-		}
-	}
-	
 	private EulerApproximator fetchFromCache(String expression, double initialX, double initialY) {
 		if (approximators.containsKey(expression)) {
 			EulerApproximator approx = approximators.get(expression);
@@ -201,14 +217,10 @@ public class UserFrame implements AutoCloseable {
 				return;
 			}
 		}
-		if (!first) {
-			clearLines();
-		} else {
-			first = false;
-		}
-		long prev = System.nanoTime();
+		
+		long previous = System.nanoTime();
 		approx.approximations(output, precision, step, amount);
-		output.println("Calculated in " + ((System.nanoTime() - prev)/(1000_000_000D)) + " seconds.");
+		EulerEstimator.spitTime(output, previous);
 	}
 
 	@Override

@@ -30,14 +30,14 @@ public class EulerApproximator {
 	public void approximations(PrintStream output, int precision, double step, int iterations) {
 		double x = initialX;
 		double y = initialY;
+		double deriv = function.calculate(x, y);
 		EulerEstimator.spitFunction(output, function);
 		EulerEstimator.spitInitial(output, precision);
-		EulerEstimator.spitLine(output, precision, x, y, function.calculate(x, y));
 		for (int n = 0; n < iterations; n++) {
-			double deriv = function.calculate(x, y);
+			EulerEstimator.spitLine(output, precision, n, x, y, deriv);
 			y = y + step*deriv;
 			x = x + step;
-			EulerEstimator.spitLine(output, precision, x, y, deriv);
+			deriv = function.calculate(x, y);
 		}
 	}
 }
