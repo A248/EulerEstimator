@@ -220,7 +220,7 @@ public class UserFrame implements AutoCloseable {
 		
 		long previous = System.nanoTime();
 		approx.approximations(output, precision, step, amount);
-		EulerEstimator.spitTime(output, previous);
+		EulerEstimator.spitTime(output, previous, precision);
 	}
 
 	@Override

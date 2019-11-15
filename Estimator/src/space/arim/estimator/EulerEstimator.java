@@ -57,8 +57,8 @@ public class EulerEstimator {
 		output.println("n    " + "|" + space + "x" + space + "|" + space + "y" + space + "|" + space + "dy/dx");
 	}
 	
-	public static void spitTime(PrintStream output, long previous) {
-		output.println("Calculated in " + ((System.nanoTime() - previous)/(1000_000_000D)) + " seconds.");
+	public static void spitTime(PrintStream output, long previous, int precision) {
+		output.println("Calculated in " + String.format("%." + precision + "f", ((System.nanoTime() - previous)/(1000_000_000D))) + " seconds.");
 	}
 
 }
