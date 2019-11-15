@@ -5,7 +5,6 @@ import java.util.Scanner;
 
 import org.mariuszgromada.math.mxparser.Function;
 
-import space.arim.estimator.DoubleTriplet;
 import space.arim.estimator.EulerApproximator;
 import space.arim.estimator.EulerEstimator;
 
@@ -104,10 +103,7 @@ public class UserConsole implements AutoCloseable {
 		EulerApproximator diffEQ = new EulerApproximator(func, x, y);
 		EulerEstimator.spitFunction(output, func);
 		EulerEstimator.spitInitial(output, precision);
-		DoubleTriplet[] results = diffEQ.approximations(step, iterations);
-		for (DoubleTriplet triplet : results) {
-			EulerEstimator.spitLine(output, precision, triplet.value1(), triplet.value2(), triplet.value3());
-		}
+		diffEQ.approximations(System.out, iterations, step, iterations);
 		say("Finished in " + ((System.nanoTime() - prev)/(1000_000_000D)) + " seconds.");
 	}
 	

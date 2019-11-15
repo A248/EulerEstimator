@@ -7,6 +7,9 @@ import space.arim.estimator.gui.UserFrame;
 
 public class EulerEstimator {
 
+	private static final String TITLE = "EulerEstimator";
+	private static final String VERSION = "v0.2.0";
+	
 	private EulerEstimator() {}
 	
 	public static boolean parseBoolean(String input) {
@@ -25,7 +28,7 @@ public class EulerEstimator {
 	}
 	
 	public static void main(String[] args) {		
-		try (UserFrame frame = new UserFrame("EulerEstimator")) {
+		try (UserFrame frame = new UserFrame(TITLE, VERSION)) {
 			frame.start();
 		} catch (Exception ex) {
 			System.out.println("ERROR: Please create an issue on Github!");

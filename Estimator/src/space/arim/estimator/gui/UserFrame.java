@@ -48,10 +48,10 @@ public class UserFrame implements AutoCloseable {
 	private boolean first = true;
 	private HashMap<String, EulerApproximator> approximators = new HashMap<String, EulerApproximator>();
 	
-	private static final String notValidFunction = "\n\nError:\nThe function you have entered is not a valid expression. Please check your syntax and try again.";
+	private static final String INVALID_FUNCTION = "\n\nError:\nThe function you have entered is not a valid expression. Please check your syntax and try again.";
 	
-	public UserFrame(String title) {
-	   frame = new JFrame(title);
+	public UserFrame(String title, String version) {
+	   frame = new JFrame(title + " " + version);
 	   panel = new JPanel();
 	   panel.setBorder(BorderFactory.createTitledBorder(title));
 	   layout = new GridBagLayout();
@@ -197,7 +197,7 @@ public class UserFrame implements AutoCloseable {
 				approx = new EulerApproximator(function, initialX, initialY);
 				approximators.put(expression, approx);
 			} else {
-				output.println(notValidFunction);
+				output.println(INVALID_FUNCTION);
 				return;
 			}
 		}

@@ -26,21 +26,6 @@ public class EulerApproximator {
 	public final double initialY() {
 		return initialY;
 	}
-
-	public DoubleTriplet[] approximations(double step, int iterations) {
-		DoubleTriplet[] results = new DoubleTriplet[iterations+1];
-		assert results.length == iterations+1;
-		double x = initialX;
-		double y = initialY;
-		results[0] = new DoubleTriplet(x, y, function.calculate(x, y));
-		for (int n = 0; n < iterations; n++) {
-			double deriv = function.calculate(x, y);
-			y = y + step*deriv;
-			x = x + step;
-			results[n+1] = new DoubleTriplet(x, y, deriv);
-		}
-		return results;
-	}
 	
 	public void approximations(PrintStream output, int precision, double step, int iterations) {
 		double x = initialX;
