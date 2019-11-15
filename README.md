@@ -1,4 +1,5 @@
 # EulerEstimator
+
 EulerEstimator approximates the value of some y given a differential equation relating dy/dx, y, and x using Euler's approximative approach.
 
 **Features**
@@ -8,15 +9,16 @@ EulerEstimator approximates the value of some y given a differential equation re
 * Generate a table with x, y, and dy/dx at every step of estimation
 
 **Example**
-Known:
+
+Suppose we know:
 * `dy/dx = cos(x)y + sin(x)`
 * `y(0) = 2`
-Unknown:
-* Want to estimate `y(3)` equals to some value
+
+We want to estimate `y(3)`
 
 Using the traditional mathemtical approach and attempting to solve this first-order linear inseparable differential equation via the application of this formula, we receive:
 y = e<sup>sin(x)</sup>∫e<sup>sin(x)</sup>sin(x)dx
-which can't be solved using Calc II techniques.
+which can't be solved using Calc II techniques. What to do?
 
 *Solution:* Use EulerEstimator. Put dy/dx = `y*cos(x) + sin(x)`, initial X = `0`, initial Y = `2`. Configure estimation parameters: number of iterations, step value, and decimal precision to display. Hit Execute, and retrieve your results!
 
