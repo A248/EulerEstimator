@@ -52,6 +52,7 @@ public class UserFrame implements AutoCloseable {
 	public UserFrame(String title, String version) {
 		
 	   frame = new JFrame(title + " " + version);
+	   frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	   panel = new JPanel();
 	   panel.setBorder(BorderFactory.createTitledBorder(title));
 	   layout = new GridBagLayout();
