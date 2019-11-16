@@ -8,7 +8,7 @@ import space.arim.estimator.gui.UserFrame;
 public class EulerEstimator {
 
 	private static final String TITLE = "EulerEstimator";
-	private static final String VERSION = "v0.2.0";
+	private static final String VERSION = "v0.2.2";
 	
 	private EulerEstimator() {}
 	
