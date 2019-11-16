@@ -8,6 +8,7 @@ import org.mariuszgromada.math.mxparser.Function;
 import space.arim.estimator.EulerApproximator;
 import space.arim.estimator.EulerEstimator;
 
+@Deprecated
 public class UserConsole implements AutoCloseable {
 	
 	private final Scanner scanner;
