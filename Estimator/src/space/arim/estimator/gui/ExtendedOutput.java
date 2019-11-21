@@ -29,7 +29,8 @@ public class ExtendedOutput extends OutputStream {
         this.textArea = textArea;
     }
 
-    public void write( int b ) {
+    @Override
+	public void write( int b ) {
         textArea.append( String.valueOf( ( char )b ) );
         textArea.setCaretPosition(textArea.getDocument().getLength());
     }
