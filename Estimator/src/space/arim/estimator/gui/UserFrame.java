@@ -141,9 +141,11 @@ public class UserFrame implements AutoCloseable {
 		panel().add(component);
 	}
 	
+	/*
 	private void add(Component component, int x, int y, int width, int height) {
 		add(component, x, y, width, height, 1, 1);
 	}
+	*/
 	
 	private void add(Component component, int x, int y, int width) {
 		add(component, x, y, width, 1, 1, 1);
